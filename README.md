@@ -1,3 +1,3 @@
 #Resume
 
-The purpose of this project is to present that resume. That is all.
+The purpose of this project is to present my resume. That is all.
