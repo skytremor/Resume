@@ -31,8 +31,8 @@ export const resumeContent: ResumeContent = {
     },
     {
       label: "GitHub",
-      value: "github.com/ChristianRod",
-      href: "https://github.com/ChristianRod",
+      value: "github.com/skytremor",
+      href: "https://github.com/skytremor",
       icon: "github",
     },
   ],

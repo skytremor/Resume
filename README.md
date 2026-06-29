@@ -2,6 +2,8 @@
 
 Static resume site built with Next.js App Router and exported for GitHub Pages.
 
+Production target: `https://skytremor.github.io/`
+
 ## Quick start
 
 ```bash
@@ -48,13 +50,9 @@ src/
 
 ## GitHub Pages
 
-The site deploys through `.github/workflows/pages.yml`.
-
-- Production builds use `output: "export"` and `trailingSlash: true`.
-- `NEXT_PUBLIC_BASE_PATH` is used for project-site deployments.
-- `NEXT_PUBLIC_SITE_URL` drives metadata and social URLs.
-
-If the repository name changes, the workflow still builds the correct base path on GitHub Actions.
+- The generated site is valid for both project Pages and the root user site.
+- Root-site deploys should use `NEXT_PUBLIC_SITE_URL=https://skytremor.github.io`.
+- `.nojekyll` is included so GitHub Pages serves `/_next` assets correctly.
 
 ## Notes for maintainers
 

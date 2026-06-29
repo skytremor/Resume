@@ -1,4 +1,4 @@
-const fallbackSiteUrl = "https://christianrod.github.io";
+const fallbackSiteUrl = "https://skytremor.github.io";
 
 export const siteConfig = {
   name: "Christian Rodriguez Resume",
@@ -10,5 +10,5 @@ export const siteConfig = {
   author: "Christian Rodriguez",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? fallbackSiteUrl,
   socialImage: "/resume-reference.png",
-  githubProfileUrl: "https://github.com/ChristianRod",
+  githubProfileUrl: "https://github.com/skytremor",
 } as const;
