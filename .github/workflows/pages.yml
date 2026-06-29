@@ -1,4 +1,4 @@
-name: Deploy Project Pages Preview
+name: Deploy GitHub Pages Site
 
 on:
   push:
@@ -37,14 +37,26 @@ jobs:
         with:
           enablement: true
 
+      - name: Derive site metadata
+        shell: bash
+        run: |
+          owner_name="${GITHUB_REPOSITORY%%/*}"
+          repo_name="${GITHUB_REPOSITORY#*/}"
+          owner_site_name="${owner_name,,}.github.io"
+          repo_name_lower="${repo_name,,}"
+
+          if [ "$repo_name_lower" = "$owner_site_name" ]; then
+            echo "NEXT_PUBLIC_SITE_URL=https://${owner_name}.github.io" >> "$GITHUB_ENV"
+          else
+            echo "NEXT_PUBLIC_BASE_PATH=/$repo_name" >> "$GITHUB_ENV"
+            echo "NEXT_PUBLIC_SITE_URL=https://${owner_name}.github.io/$repo_name" >> "$GITHUB_ENV"
+          fi
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build static export
         run: npm run build
-        env:
-          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
-          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

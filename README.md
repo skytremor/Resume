@@ -56,7 +56,9 @@ src/
 - The generated site is valid for both project Pages and the root user site.
 - The canonical production profile is `https://skytremor.github.io/`.
 - Root-site deploys should export with `NEXT_PUBLIC_SITE_URL=https://skytremor.github.io` and no base path.
-- The included workflow deploys a project-pages build for this repository; the root-site deployment should publish the generated `out/` contents to the `skytremor.github.io` repository.
+- The included workflow builds from source and deploys `out/` directly to GitHub Pages.
+- When the repository name is `skytremor.github.io`, the workflow publishes the root user site with no base path.
+- When the repository name is anything else, the workflow falls back to project Pages behavior and publishes under `/${repository-name}`.
 - `.nojekyll` is included so GitHub Pages serves `/_next` assets correctly.
 
 ## Brand asset policy

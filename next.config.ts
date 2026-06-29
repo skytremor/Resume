@@ -9,9 +9,18 @@ function getBasePath() {
       : `/${explicitBasePath}`;
   }
 
-  const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1];
+  const [repositoryOwner, repositoryName] =
+    process.env.GITHUB_REPOSITORY?.split("/") ?? [];
 
   if (process.env.GITHUB_ACTIONS && repositoryName) {
+    const rootPagesRepositoryName = repositoryOwner
+      ? `${repositoryOwner.toLowerCase()}.github.io`
+      : null;
+
+    if (rootPagesRepositoryName === repositoryName.toLowerCase()) {
+      return "";
+    }
+
     return `/${repositoryName}`;
   }
 
