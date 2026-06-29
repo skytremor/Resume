@@ -2,7 +2,8 @@
 
 Static resume site built with Next.js App Router and exported for GitHub Pages.
 
-Production target: `https://skytremor.github.io/`
+Source repo: this project.
+Live profile target: `https://skytremor.github.io/`
 
 ## Quick start
 
@@ -51,7 +52,9 @@ src/
 ## GitHub Pages
 
 - The generated site is valid for both project Pages and the root user site.
-- Root-site deploys should use `NEXT_PUBLIC_SITE_URL=https://skytremor.github.io`.
+- The canonical production profile is `https://skytremor.github.io/`.
+- Root-site deploys should export with `NEXT_PUBLIC_SITE_URL=https://skytremor.github.io` and no base path.
+- The included workflow deploys a project-pages build for this repository; the root-site deployment should publish the generated `out/` contents to the `skytremor.github.io` repository.
 - `.nojekyll` is included so GitHub Pages serves `/_next` assets correctly.
 
 ## Notes for maintainers

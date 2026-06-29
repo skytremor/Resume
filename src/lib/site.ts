@@ -9,6 +9,5 @@ export const siteConfig = {
     "OutSystems Expert Developer resume covering enterprise delivery, integrations, workflow automation, and AI implementations.",
   author: "Christian Rodriguez",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? fallbackSiteUrl,
-  socialImage: "/resume-reference.png",
   githubProfileUrl: "https://github.com/skytremor",
 } as const;

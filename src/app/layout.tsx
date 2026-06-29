@@ -4,6 +4,8 @@ import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
 
+const socialImages = undefined;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
   title: siteConfig.title,
@@ -20,20 +22,13 @@ export const metadata: Metadata = {
     url: "/",
     siteName: siteConfig.name,
     type: "profile",
-    images: [
-      {
-        url: siteConfig.socialImage,
-        width: 1024,
-        height: 1536,
-        alt: "Christian Rodriguez OutSystems Expert Developer resume preview",
-      },
-    ],
+    images: socialImages,
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: siteConfig.title,
     description: siteConfig.socialDescription,
-    images: [siteConfig.socialImage],
+    images: socialImages,
   },
 };
 
