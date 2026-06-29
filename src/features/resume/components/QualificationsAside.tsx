@@ -1,6 +1,6 @@
 import type { ResumeFact, TechItem } from "../types";
-import { BrandAsset } from "./BrandAsset";
 import { Icon } from "./Icon";
+import { OutSystemsBadge } from "./OutSystemsBadge";
 import { SectionHeading } from "./SectionHeading";
 
 type QualificationsAsideProps = Readonly<{
@@ -28,47 +28,50 @@ export function QualificationsAside({
   stack,
   facts,
 }: QualificationsAsideProps) {
+  const visibleCertifications = certifications.slice(0, 4);
+  const hiddenCertifications = certifications.slice(4);
+
   return (
     <aside
       className="relative z-10 grid gap-[14px]"
       aria-label="Additional qualifications"
     >
       <section className="rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] shadow-resume-panel lg:p-5">
-        <SectionHeading icon="certification">Certifications</SectionHeading>
+        <SectionHeading icon="certification">
+          Certifications &amp; Specializations
+        </SectionHeading>
 
-        <div
-          className="mb-2 flex items-center justify-center gap-[10px]"
-          aria-hidden="true"
-        >
-          <BrandAsset
-            asset="outsystemsLogo"
-            className="h-auto w-full max-w-[148px]"
-            decorative
-            height={36}
-            width={148}
-          />
+        <div className="mb-4">
+          <div className="relative aspect-[384/488] w-full max-w-[9.5rem] shrink-0 overflow-visible sm:max-w-42">
+            <OutSystemsBadge compact />
+          </div>
         </div>
-        <p className="mt-0 mb-0 text-center text-[0.95rem] leading-[1.2] font-[850] text-resume-red">
-          EXPERT DEVELOPER
-        </p>
-        <p
-          className="mt-[9px] mb-4 text-center font-mono text-[1.25rem] leading-none text-resume-red [word-spacing:0.28em]"
-          aria-label="Three star certification"
-        >
-          <span aria-hidden="true">&#9733; &#9733; &#9733;</span>
-        </p>
 
         <ul className="m-0 grid list-none gap-[9px] p-0">
-          {certifications.map((item) => (
+          {visibleCertifications.map((item) => (
             <CheckItem key={item}>{item}</CheckItem>
           ))}
         </ul>
+
+        {hiddenCertifications.length > 0 ? (
+          <details className="mt-3">
+            <summary className="cursor-pointer text-[0.84rem] font-extrabold text-resume-red">
+              See {hiddenCertifications.length} more
+            </summary>
+
+            <ul className="mt-3 grid list-none gap-[9px] p-0">
+              {hiddenCertifications.map((item) => (
+                <CheckItem key={item}>{item}</CheckItem>
+              ))}
+            </ul>
+          </details>
+        ) : null}
       </section>
 
       <section className="rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] shadow-resume-panel lg:p-5">
         <SectionHeading icon="stack">Technical Stack</SectionHeading>
 
-        <ul className="m-0 grid list-none grid-cols-2 gap-x-3 gap-y-4 p-0 md:grid-cols-3">
+        <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(82px,1fr))] gap-x-3 gap-y-4 p-0">
           {stack.map((item) => (
             <li
               className="grid min-h-[68px] min-w-0 content-start justify-items-center gap-[7px] text-center text-[0.78rem] font-bold text-[#eef2f4]"

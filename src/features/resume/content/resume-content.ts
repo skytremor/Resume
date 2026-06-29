@@ -19,21 +19,22 @@ export const resumeContent: ResumeContent = {
     },
     {
       label: "Email",
-      value: "christian.rodriguez@example.com",
-      href: "mailto:christian.rodriguez@example.com",
+      value: "christian.rodriguez@upr.edu",
+      href: "mailto:christian.rodriguez@upr.edu",
       icon: { type: "ui", key: "email" },
     },
     {
       label: "LinkedIn",
-      value: "linkedin.com/in/christian-rodriguez",
+      value: "LinkedIn - Christian Rodriguez",
       href: "https://linkedin.com/in/christian-rodriguez",
       icon: { type: "brand", key: "linkedin" },
     },
+
     {
-      label: "GitHub",
-      value: "github.com/skytremor",
-      href: "https://github.com/skytremor",
-      icon: { type: "brand", key: "github" },
+      label: "OutSystems",
+      value: "OutSystems Profile",
+      href: "https://www.outsystems.com/profile/na7cyeioxw",
+      icon: { type: "brand", key: "outsystemsLogo" },
     },
   ],
   expertise: [
@@ -85,7 +86,12 @@ export const resumeContent: ResumeContent = {
       role: "OutSystems Developer",
       summary:
         "Implemented internal application as front end for mainframe system responsible for generating letters for approving, denying or general notifications about medical insurance claims.",
-      tags: ["Mainframe Integration", "Claims Processing", "Workflows", "UI/UX"],
+      tags: [
+        "Mainframe Integration",
+        "Claims Processing",
+        "Workflows",
+        "UI/UX",
+      ],
       logoVariant: "ngs",
       logoText: "NGS",
     },
@@ -128,11 +134,16 @@ export const resumeContent: ResumeContent = {
     },
   ],
   certifications: [
-    "OutSystems Expert Developer",
-    "OutSystems Developer Cloud (ODC) Associate",
-    "OutSystems 11 Developer Associate",
-    "OutSystems 11 Traditional Web Developer Associate",
-    "+ 3 Specialization Certifications",
+    "Expert Developer (O11) - Since Jun 23, 2026",
+    "Associate Developer (ODC) - Since Jun 03, 2026",
+    "Associate Developer (O11) - Since Jun 01, 2020",
+    "Associate Traditional Web Developer (O11) - Since Sep 30, 2019",
+    "Front-end Developer Specialist (O11 and ODC) - Since Jun 23, 2026",
+    "Web Developer Specialist (ODC) - Since Jun 13, 2026",
+    "Web Developer Specialist (O11) - Since Jun 13, 2026",
+    "Architecture Specialist (O11) - Since May 30, 2026",
+    "Security Specialist (O11 and ODC) - Since Oct 06, 2023",
+    "Mobile Developer Specialist (O11 and ODC) - Since Jun 01, 2020",
   ],
   stack: [
     { label: "OutSystems", icon: { type: "brand", key: "outsystemsLogo" } },
@@ -153,9 +164,12 @@ export const resumeContent: ResumeContent = {
     { text: "Based in San Juan, Puerto Rico", icon: "location" },
     { text: "Open to remote opportunities (US / PR)", icon: "globe" },
     { text: "Available to start immediately", icon: "availability" },
-    { text: "Driver's License and Firearm License (PR)", icon: "car" },
-    { text: "Bilingual: English (Professional) / Spanish (Native)", icon: "languages" },
+    {
+      text: "Bilingual: English (Professional) / Spanish (Native)",
+      icon: "languages",
+    },
   ],
-  quote: "Building scalable solutions, leveraging AI to solve real business problems.",
+  quote:
+    "Building scalable solutions, leveraging AI to solve real business problems.",
   availability: "Actively looking for new opportunities",
 };

@@ -8,7 +8,7 @@ type ContactListProps = Readonly<{
 export function ContactList({ contacts }: ContactListProps) {
   return (
     <address
-      className="relative z-10 grid gap-[10px] not-italic md:grid-cols-2 md:gap-[14px] lg:grid-cols-[0.78fr_1.28fr_1.38fr_0.96fr]"
+      className="relative z-10 grid gap-[10px] not-italic sm:grid-cols-2 sm:gap-[12px] lg:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] lg:gap-[14px]"
       aria-label="Contact details"
     >
       {contacts.map((contact) => {
@@ -16,7 +16,7 @@ export function ContactList({ contacts }: ContactListProps) {
 
         return (
           <div
-            className="flex min-h-12 min-w-0 items-center gap-[10px] rounded-lg border border-[rgba(148,163,184,0.16)] bg-[rgba(255,255,255,0.035)] px-[14px] py-3"
+            className="flex min-h-12 min-w-0 items-center gap-[10px] rounded-lg border border-[rgba(148,163,184,0.16)] bg-[rgba(255,255,255,0.035)] px-[13px] py-3 sm:px-[14px]"
             key={contact.label}
           >
             <Icon graphic={contact.icon} />

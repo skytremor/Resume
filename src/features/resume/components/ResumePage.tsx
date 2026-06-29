@@ -22,7 +22,7 @@ export function ResumePage({ content }: ResumePageProps) {
     >
       <AnimatedMeshBackground />
       <section
-        className="relative z-10 mx-auto grid w-full max-w-[1120px] content-start gap-[clamp(16px,2vw,22px)] overflow-visible px-[clamp(20px,4vw,36px)] py-[clamp(20px,4vw,36px)] lg:min-h-screen lg:p-[30px] print:w-[1024px] print:p-[30px]"
+        className="relative z-10 mx-auto grid w-full max-w-[1120px] content-start gap-[clamp(14px,2vw,22px)] overflow-visible px-[clamp(16px,4vw,36px)] py-[clamp(16px,4vw,36px)] lg:min-h-screen lg:p-[30px] print:w-[1024px] print:p-[30px]"
         aria-labelledby="resume-title"
       >
         <div
@@ -30,9 +30,11 @@ export function ResumePage({ content }: ResumePageProps) {
           aria-hidden="true"
         />
 
-        <header className="relative z-10 grid items-start gap-6 pt-1 md:grid-cols-[minmax(0,1fr)_300px] md:gap-[30px] lg:min-h-[238px] lg:grid-cols-[minmax(0,1fr)_306px]">
+        <header className="relative z-10 grid items-start gap-5 pt-1 sm:gap-6 md:grid-cols-[minmax(0,1fr)_300px] md:gap-[30px] lg:min-h-[238px] lg:grid-cols-[minmax(0,1fr)_306px]">
           <HeroSection profile={content.profile} />
-          <OutSystemsBadge />
+          <div className="relative aspect-[384/488] w-full max-w-[11.5rem] shrink-0 justify-self-center overflow-visible sm:max-w-[12.75rem] md:max-w-50 md:justify-self-end">
+            <OutSystemsBadge />
+          </div>
         </header>
 
         <ContactList contacts={content.contacts} />
@@ -55,29 +57,31 @@ export function ResumePage({ content }: ResumePageProps) {
           />
         </section>
 
-        <blockquote className="relative z-10 flex flex-wrap items-center justify-center gap-1 rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] text-center text-[clamp(1.05rem,4vw,1.55rem)] font-extrabold text-resume-muted shadow-resume-panel">
+        <blockquote className="relative z-10 flex flex-wrap items-center justify-center gap-x-1 gap-y-2 rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] px-4 py-[16px] text-center text-[clamp(0.98rem,4vw,1.55rem)] font-extrabold text-resume-muted shadow-resume-panel sm:p-[18px]">
           <span
-            className="text-[2.2rem] leading-[0.8] font-[850] text-resume-red"
+            className="text-[1.9rem] leading-[0.8] font-[850] text-resume-red sm:text-[2.2rem]"
             aria-hidden="true"
           >
             &ldquo;
           </span>
           {content.quote}
           <span
-            className="text-[2.2rem] leading-[0.8] font-[850] text-resume-red"
+            className="text-[1.9rem] leading-[0.8] font-[850] text-resume-red sm:text-[2.2rem]"
             aria-hidden="true"
           >
             &rdquo;
           </span>
         </blockquote>
 
-        <footer className="relative z-10 flex flex-wrap items-center justify-center gap-[10px] text-center text-[0.92rem] text-[#d8e0e7]">
+        <footer className="relative z-10 flex flex-wrap items-center justify-center gap-x-[10px] gap-y-2 text-center text-[0.9rem] text-[#d8e0e7] sm:text-[0.92rem]">
           <span
             className="h-2.5 w-2.5 rounded-full bg-resume-green shadow-[0_0_0_6px_rgba(32,214,107,0.12)]"
             aria-hidden="true"
           />
           <span>{content.availability}</span>
-          <span aria-hidden="true">/</span>
+          <span aria-hidden="true" className="hidden sm:inline">
+            /
+          </span>
           <strong className="text-resume-red">
             Let&apos;s build the future, together.
           </strong>
