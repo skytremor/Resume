@@ -5,7 +5,7 @@ export const resumeContent: ResumeContent = {
     name: "Christian Rodriguez",
     role: "OutSystems Expert Developer",
     highlights: ["Low-Code Expert", "Solutions Builder", "Problem Solver"],
-    bio: "OutSystems Expert certified developer with 5+ years of experience building secure, scalable, and high-performance enterprise applications. Specialized in full-cycle development, complex integrations, workflow automation, and agentic/AI implementations using the OutSystems platform.",
+    bio: "OutSystems Expert certified developer with 7+ years of experience building secure, scalable, and high-performance enterprise applications. Specialized in full-cycle development, complex integrations, workflow automation, and agentic/AI implementations using the OutSystems platform.",
     summary: [
       "OutSystems developer with a strong track record delivering mission-critical solutions for government, healthcare, financial and enterprise organizations. Experienced in full-cycle development, integrations, workflow automation, and modern agentic/AI implementations that drive efficiency and improve decision-making.",
       "Committed to clean architecture, performance, security, and continuous improvement.",
