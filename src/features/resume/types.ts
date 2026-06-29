@@ -1,19 +1,48 @@
-export type ResumeIconName =
-  | "pin"
-  | "mail"
-  | "linkedin"
-  | "github"
-  | "person"
-  | "bank"
-  | "briefcase"
-  | "award"
-  | "monitor"
-  | "info"
-  | "headset"
-  | "clock"
-  | "timer"
+export type ResumeUiIconKey =
+  | "analytics"
+  | "api"
+  | "apps"
+  | "availability"
   | "car"
-  | "language";
+  | "certification"
+  | "cloud"
+  | "code"
+  | "database"
+  | "domain"
+  | "email"
+  | "experience"
+  | "externalLink"
+  | "globe"
+  | "info"
+  | "languages"
+  | "location"
+  | "stack"
+  | "summary";
+
+export type BrandAssetKey =
+  | "amazonwebservices"
+  | "azure"
+  | "css3"
+  | "docker"
+  | "git"
+  | "github"
+  | "html5"
+  | "javascript"
+  | "linkedin"
+  | "outsystemsLogo"
+  | "outsystemsLogoMainColor"
+  | "postgresql"
+  | "react";
+
+export type ResumeGraphic =
+  | {
+      type: "brand";
+      key: BrandAssetKey;
+    }
+  | {
+      type: "ui";
+      key: ResumeUiIconKey;
+    };
 
 export type CompanyLogoVariant =
   | "police"
@@ -23,25 +52,11 @@ export type CompanyLogoVariant =
   | "oil"
   | "personas";
 
-export type TechIconVariant =
-  | "osMark"
-  | "html5"
-  | "js"
-  | "sql"
-  | "api"
-  | "git"
-  | "docker"
-  | "azure"
-  | "aws"
-  | "pg"
-  | "powerbi"
-  | "ms";
-
 export type ContactLink = {
   label: string;
   value: string;
   href?: string;
-  icon: ResumeIconName;
+  icon: ResumeGraphic;
 };
 
 export type Experience = {
@@ -57,13 +72,12 @@ export type Experience = {
 
 export type TechItem = {
   label: string;
-  iconVariant: TechIconVariant;
-  iconText?: string;
+  icon: ResumeGraphic;
 };
 
 export type ResumeFact = {
   text: string;
-  icon: ResumeIconName;
+  icon: ResumeUiIconKey;
 };
 
 export type ResumeProfile = {

@@ -23,15 +23,16 @@ src/
   app/
     layout.tsx              # global metadata, fonts, document shell
     page.tsx                # thin route entrypoint
-    globals.css             # app-wide resets only
+    globals.css             # Tailwind import, theme tokens, and global base rules
   features/resume/
-    components/             # presentational sections and small UI primitives
+    components/             # presentational sections with colocated Tailwind styling
     content/                # resume copy and structured data
-    styles/                 # resume-specific CSS modules
+    graphic-registry.ts     # typed UI icon and brand asset mappings
     types.ts                # shared resume types
   lib/
     cn.ts                   # tiny className helper
     site.ts                 # site metadata and external URLs
+  public/brands/            # checked-in SVG brand assets used by the resume
 ```
 
 ## Where to edit
@@ -39,7 +40,8 @@ src/
 - Update resume text and links in `src/features/resume/content/resume-content.ts`.
 - Update layout or metadata in `src/app/layout.tsx` and `src/lib/site.ts`.
 - Update section structure in `src/features/resume/components/`.
-- Update visuals in `src/features/resume/styles/`.
+- Update visuals directly in the relevant component JSX via Tailwind classes.
+- Update vendored logos in `public/brands/` and the corresponding registry entries in `src/features/resume/graphic-registry.ts`.
 
 ## Scripts
 
@@ -56,6 +58,14 @@ src/
 - Root-site deploys should export with `NEXT_PUBLIC_SITE_URL=https://skytremor.github.io` and no base path.
 - The included workflow deploys a project-pages build for this repository; the root-site deployment should publish the generated `out/` contents to the `skytremor.github.io` repository.
 - `.nojekyll` is included so GitHub Pages serves `/_next` assets correctly.
+
+## Brand asset policy
+
+- OutSystems assets come from the official SVG press kit first; PNG and JPG files are fallback exports only.
+- Devicon is the default source for shipped technology logos such as HTML5, CSS3, JavaScript, Git, Docker, Azure, and PostgreSQL.
+- Simple Icons is used for shipped brand marks where it is the best local source, such as GitHub.
+- When a requested brand is not available from the preferred source, use the closest approved local asset or a Lucide fallback instead of loading remote media at runtime.
+- Keep all shipped brand assets checked into `public/brands/`; do not hotlink CDN or vendor URLs from the UI.
 
 ## Notes for maintainers
 
