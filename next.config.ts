@@ -34,6 +34,9 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath: basePath || undefined,
   assetPrefix: basePath || undefined,
+  experimental: {
+    inlineCss: true,
+  },
   reactCompiler: true,
   turbopack: {
     root: process.cwd(),

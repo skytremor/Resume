@@ -1,8 +1,8 @@
-# Christian Rodriguez Resume
+# skytremor.github.io
 
-Static resume site built with Next.js App Router and exported for GitHub Pages.
+Christian Rodriguez's static resume site, built with Next.js App Router and exported for GitHub Pages.
 
-Source repo: this project.
+Source repo: `skytremor/skytremor.github.io`
 Live profile target: `https://skytremor.github.io/`
 
 ## Quick start

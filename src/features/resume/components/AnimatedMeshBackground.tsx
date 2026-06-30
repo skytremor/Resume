@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from "react";
 const MOBILE_BREAKPOINT = "(max-width: 767px)";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const RED = "255, 49, 41";
+const DESKTOP_MAX_DPR = 1.5;
+const MOBILE_MAX_DPR = 1.25;
+const FRAME_INTERVAL_MS = 1000 / 30;
 
 type SceneConfig = {
   amplitude: number;
@@ -19,6 +22,51 @@ type SceneConfig = {
   sourceY: number;
   topSpread: number;
   waveStart: number;
+};
+
+type PreparedDot = {
+  anchorPullScale: number;
+  crestBias: number;
+  downstreamProgress: number;
+  driftMix: number;
+  driftScale: number;
+  fanOut: number;
+  funnelBand: number;
+  gridX: number;
+  gridY: number;
+  horizontal: number;
+  laneVisibility: number;
+  lateralMix: number;
+  lateralScale: number;
+  opacityBase: number;
+  radiusBase: number;
+  rippleMix: number;
+  rippleScale: number;
+  rowProgress: number;
+  surfaceMix: number;
+  surfaceScale: number;
+  verticalSpread: number;
+  waveEnvelope: number;
+  xBase: number;
+  yBase: number;
+};
+
+type PreparedScene = {
+  background: CanvasGradient;
+  compact: boolean;
+  cssHeight: number;
+  cssWidth: number;
+  dpr: number;
+  dots: PreparedDot[];
+  halo: CanvasGradient;
+  innerCutout: number;
+  outerRingGlow: number;
+  ringRadius: number;
+  topShade: CanvasGradient;
+  width: number;
+  height: number;
+  centerX: number;
+  centerY: number;
 };
 
 const DESKTOP_SCENE: SceneConfig = {
@@ -67,38 +115,26 @@ function wrapSignedDistance(value: number, period: number) {
   return wrapped - safePeriod * 0.5;
 }
 
-function resizeCanvas(canvas: HTMLCanvasElement) {
-  const bounds = canvas.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const width = Math.max(1, Math.round(bounds.width * dpr));
-  const height = Math.max(1, Math.round(bounds.height * dpr));
-
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-  }
-
-  return {
-    cssHeight: bounds.height,
-    cssWidth: bounds.width,
-    dpr,
-  };
-}
-
-function drawDotWave(
+function prepareWaveScene(
+  ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  phase: number,
   compact: boolean,
 ) {
-  const ctx = canvas.getContext("2d");
+  const bounds = canvas.getBoundingClientRect();
+  const dpr = Math.min(
+    window.devicePixelRatio || 1,
+    compact ? MOBILE_MAX_DPR : DESKTOP_MAX_DPR,
+  );
+  const width = Math.max(1, bounds.width);
+  const height = Math.max(1, bounds.height);
+  const pixelWidth = Math.max(1, Math.round(width * dpr));
+  const pixelHeight = Math.max(1, Math.round(height * dpr));
 
-  if (!ctx) {
-    return false;
+  if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+    canvas.width = pixelWidth;
+    canvas.height = pixelHeight;
   }
 
-  const { cssHeight, cssWidth, dpr } = resizeCanvas(canvas);
-  const width = Math.max(cssWidth, 1);
-  const height = Math.max(cssHeight, 1);
   const scene = compact ? MOBILE_SCENE : DESKTOP_SCENE;
   const centerX = width * scene.anchorX;
   const centerY = height * scene.anchorY;
@@ -110,33 +146,7 @@ function drawDotWave(
   const waveDepth = Math.max(height - waveStartY, 1);
   const streamDepth = Math.max(height - streamOriginY, 1);
   const orbProgress = clamp01((centerY - streamOriginY) / streamDepth);
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, width, height);
-
-  const background = ctx.createLinearGradient(0, 0, width, height);
-  background.addColorStop(0, "#06090d");
-  background.addColorStop(0.38, "#0b0f15");
-  background.addColorStop(0.72, "#11151d");
-  background.addColorStop(1, "#070a0f");
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, width, height);
-
-  const halo = ctx.createRadialGradient(
-    centerX,
-    centerY,
-    innerCutout * 0.2,
-    centerX,
-    centerY,
-    outerRingGlow,
-  );
-  halo.addColorStop(0, "rgba(255,49,41,0.34)");
-  halo.addColorStop(0.22, "rgba(255,49,41,0.2)");
-  halo.addColorStop(0.55, "rgba(255,49,41,0.1)");
-  halo.addColorStop(0.8, "rgba(255,49,41,0.04)");
-  halo.addColorStop(1, "rgba(255,49,41,0)");
-  ctx.fillStyle = halo;
-  ctx.fillRect(0, 0, width, height);
+  const dots: PreparedDot[] = [];
 
   for (
     let gridX = -scene.spacing;
@@ -147,6 +157,7 @@ function drawDotWave(
       wrapSignedDistance(gridX - centerX, width) / Math.max(width * 0.5, 1);
     const waveEnvelope = gaussian(horizontal, 0.82);
     const crestBias = gaussian((horizontal - 0.05) / 0.66, 0.42);
+    const anchorPullScale = gaussian(horizontal / 0.38, 0.26);
 
     for (
       let gridY = -scene.spacing;
@@ -172,81 +183,155 @@ function drawDotWave(
           funnelBand * scene.funnelStrength,
       );
       const verticalSpread = 0.84 + streamProgress * 0.18 - funnelBand * 0.08;
-      const drift =
-        Math.sin(gridY * 0.026 + phase * 1.15 + horizontal * 4.7) *
-        (2.8 + rowProgress * 8.2);
-      const lateralWave =
-        Math.sin(gridX * 0.018 - phase * 1.35 + rowProgress * 5.6) *
-        scene.amplitude *
-        0.26;
-      const surfaceWave =
-        Math.sin(horizontal * 5.1 - phase * 1.05 + rowProgress * 6.8) *
-        scene.amplitude *
-        depthStrength;
-      const ripple =
-        Math.cos(gridX * 0.01 + rowProgress * 11 - phase * 0.9) *
-        (3.2 + rowProgress * 7.4);
-      const anchorPull = gaussian(horizontal / 0.38, 0.26) * (1 - rowProgress);
-      const x =
-        centerX +
-        (gridX - centerX) * fanOut +
-        drift * (0.14 + streamProgress * 0.34 + waveEnvelope * 0.3) +
-        lateralWave * (0.08 + streamProgress * 0.4 + funnelBand * 0.08);
-      const y =
-        streamOriginY +
-        (gridY - streamOriginY) * verticalSpread +
-        surfaceWave * ridge * (0.08 + downstreamProgress * 0.48) +
-        ripple * (0.05 + downstreamProgress * 0.14 + waveEnvelope * 0.34) -
-        anchorPull * (18 + funnelBand * 12);
-      const dx = x - centerX;
-      const dy = y - centerY;
-      const distance = Math.hypot(dx, dy);
-
-      if (distance < innerCutout) {
-        continue;
-      }
-
-      const ringBand = gaussian((distance - ringRadius) / ringRadius, 0.12);
-      const centerGlow = gaussian(distance / outerRingGlow, 0.55);
       const horizonFade = rowProgress <= 0.06 ? rowProgress / 0.06 : 1;
       const depthFade = Math.max(0.28, Math.min(1, rowProgress * 1.2 + 0.16));
       const laneVisibility = Math.max(
         0.28,
         horizonFade * depthFade + funnelBand * 0.12,
       );
-      const opacity =
-        0.32 +
-        waveEnvelope * 0.22 +
-        crestBias * 0.28 +
-        ringBand * 0.3 +
-        centerGlow * 0.06 +
-        rowProgress * 0.16 +
-        downstreamProgress * 0.2 +
-        funnelBand * 0.18;
-      const radius =
-        scene.baseRadius +
-        rowProgress * 0.54 +
-        waveEnvelope * 0.22 +
-        ringBand * 0.28 +
-        centerGlow * 0.1 +
-        downstreamProgress * 0.12;
 
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${RED}, ${Math.min(
-        0.82,
-        opacity * laneVisibility,
-      )})`;
-      ctx.fill();
+      dots.push({
+        anchorPullScale,
+        crestBias,
+        downstreamProgress,
+        driftMix: 0.14 + streamProgress * 0.34 + waveEnvelope * 0.3,
+        driftScale: 2.8 + rowProgress * 8.2,
+        fanOut,
+        funnelBand,
+        gridX,
+        gridY,
+        horizontal,
+        laneVisibility,
+        lateralMix: 0.08 + streamProgress * 0.4 + funnelBand * 0.08,
+        lateralScale: scene.amplitude * 0.26,
+        opacityBase:
+          0.32 +
+          waveEnvelope * 0.22 +
+          crestBias * 0.28 +
+          rowProgress * 0.16 +
+          downstreamProgress * 0.2 +
+          funnelBand * 0.18,
+        radiusBase:
+          scene.baseRadius +
+          rowProgress * 0.54 +
+          waveEnvelope * 0.22 +
+          downstreamProgress * 0.12,
+        rippleMix: 0.05 + downstreamProgress * 0.14 + waveEnvelope * 0.34,
+        rippleScale: 3.2 + rowProgress * 7.4,
+        rowProgress,
+        surfaceMix: ridge * (0.08 + downstreamProgress * 0.48),
+        surfaceScale: scene.amplitude * depthStrength,
+        verticalSpread,
+        waveEnvelope,
+        xBase: centerX + (gridX - centerX) * fanOut,
+        yBase:
+          streamOriginY +
+          (gridY - streamOriginY) * verticalSpread -
+          anchorPullScale * (1 - rowProgress) * (18 + funnelBand * 12),
+      });
     }
   }
+
+  const background = ctx.createLinearGradient(0, 0, width, height);
+  background.addColorStop(0, "#06090d");
+  background.addColorStop(0.38, "#0b0f15");
+  background.addColorStop(0.72, "#11151d");
+  background.addColorStop(1, "#070a0f");
+
+  const halo = ctx.createRadialGradient(
+    centerX,
+    centerY,
+    innerCutout * 0.2,
+    centerX,
+    centerY,
+    outerRingGlow,
+  );
+  halo.addColorStop(0, "rgba(255,49,41,0.34)");
+  halo.addColorStop(0.22, "rgba(255,49,41,0.2)");
+  halo.addColorStop(0.55, "rgba(255,49,41,0.1)");
+  halo.addColorStop(0.8, "rgba(255,49,41,0.04)");
+  halo.addColorStop(1, "rgba(255,49,41,0)");
 
   const topShade = ctx.createLinearGradient(0, 0, 0, height);
   topShade.addColorStop(0, "rgba(0,0,0,0.34)");
   topShade.addColorStop(0.3, "rgba(0,0,0,0.04)");
   topShade.addColorStop(1, "rgba(0,0,0,0.48)");
-  ctx.fillStyle = topShade;
-  ctx.fillRect(0, 0, width, height);
+
+  return {
+    background,
+    centerX,
+    centerY,
+    compact,
+    cssHeight: height,
+    cssWidth: width,
+    dots,
+    dpr,
+    halo,
+    height,
+    innerCutout,
+    outerRingGlow,
+    ringRadius,
+    topShade,
+    width,
+  } satisfies PreparedScene;
+}
+
+function drawPreparedScene(
+  ctx: CanvasRenderingContext2D,
+  scene: PreparedScene,
+  phase: number,
+) {
+  ctx.setTransform(scene.dpr, 0, 0, scene.dpr, 0, 0);
+  ctx.clearRect(0, 0, scene.cssWidth, scene.cssHeight);
+  ctx.fillStyle = scene.background;
+  ctx.fillRect(0, 0, scene.width, scene.height);
+  ctx.fillStyle = scene.halo;
+  ctx.fillRect(0, 0, scene.width, scene.height);
+
+  for (const dot of scene.dots) {
+    const drift =
+      Math.sin(dot.gridY * 0.026 + phase * 1.15 + dot.horizontal * 4.7) *
+      dot.driftScale;
+    const lateralWave =
+      Math.sin(dot.gridX * 0.018 - phase * 1.35 + dot.rowProgress * 5.6) *
+      dot.lateralScale;
+    const surfaceWave =
+      Math.sin(dot.horizontal * 5.1 - phase * 1.05 + dot.rowProgress * 6.8) *
+      dot.surfaceScale;
+    const ripple =
+      Math.cos(dot.gridX * 0.01 + dot.rowProgress * 11 - phase * 0.9) *
+      dot.rippleScale;
+    const x = dot.xBase + drift * dot.driftMix + lateralWave * dot.lateralMix;
+    const y =
+      dot.yBase +
+      surfaceWave * dot.surfaceMix +
+      ripple * dot.rippleMix;
+    const distance = Math.hypot(x - scene.centerX, y - scene.centerY);
+
+    if (distance < scene.innerCutout) {
+      continue;
+    }
+
+    const ringBand = gaussian(
+      (distance - scene.ringRadius) / scene.ringRadius,
+      0.12,
+    );
+    const centerGlow = gaussian(distance / scene.outerRingGlow, 0.55);
+    const opacity = Math.min(
+      0.82,
+      (dot.opacityBase + ringBand * 0.3 + centerGlow * 0.06) *
+        dot.laneVisibility,
+    );
+    const radius = dot.radiusBase + ringBand * 0.28 + centerGlow * 0.1;
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${RED}, ${opacity})`;
+    ctx.fill();
+  }
+
+  ctx.fillStyle = scene.topShade;
+  ctx.fillRect(0, 0, scene.width, scene.height);
 
   return true;
 }
@@ -263,20 +348,49 @@ export function AnimatedMeshBackground() {
       return;
     }
 
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      return;
+    }
+
     const reduceMotionQuery = window.matchMedia(REDUCED_MOTION_QUERY);
     const compactQuery = window.matchMedia(MOBILE_BREAKPOINT);
     let frameId = 0;
     let disposed = false;
+    let lastFrameTime = 0;
+    let scene: PreparedScene | null = null;
+    let reducedMotion = reduceMotionQuery.matches;
+    let visible = document.visibilityState === "visible";
+    let resizeObserver: ResizeObserver | null = null;
+
+    const rebuildScene = () => {
+      scene = prepareWaveScene(ctx, canvas, compactQuery.matches);
+    };
 
     const render = (time: number) => {
-      if (disposed) {
+      if (disposed || !visible) {
         return;
       }
 
-      const drew = drawDotWave(
-        canvas,
-        reduceMotionQuery.matches ? 1.2 : time * 0.001,
-        compactQuery.matches,
+      if (!scene) {
+        rebuildScene();
+      }
+
+      if (!scene) {
+        return;
+      }
+
+      if (!reducedMotion && time - lastFrameTime < FRAME_INTERVAL_MS) {
+        frameId = window.requestAnimationFrame(render);
+        return;
+      }
+
+      lastFrameTime = time;
+      const drew = drawPreparedScene(
+        ctx,
+        scene,
+        reducedMotion ? 1.2 : time * 0.001,
       );
 
       if (drew && !readyRef.current) {
@@ -284,31 +398,69 @@ export function AnimatedMeshBackground() {
         setIsReady(true);
       }
 
-      if (!reduceMotionQuery.matches) {
+      if (!reducedMotion) {
         frameId = window.requestAnimationFrame(render);
       }
     };
 
-    const start = () => {
+    const start = (shouldRebuild = false) => {
+      if (shouldRebuild || !scene) {
+        rebuildScene();
+      }
+
       window.cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(render);
+      lastFrameTime = 0;
+
+      if (visible) {
+        frameId = window.requestAnimationFrame(render);
+      }
     };
 
     const handlePreferenceChange = () => {
-      start();
+      reducedMotion = reduceMotionQuery.matches;
+      start(true);
     };
 
-    start();
-    window.addEventListener("resize", start);
+    const handleCompactChange = () => {
+      start(true);
+    };
+
+    const handleVisibilityChange = () => {
+      visible = document.visibilityState === "visible";
+
+      if (visible) {
+        start();
+      } else {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+
+    const handleResize = () => {
+      start(true);
+    };
+
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(handleResize);
+      resizeObserver.observe(canvas);
+    } else {
+      window.addEventListener("resize", handleResize);
+    }
+
+    start(true);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     reduceMotionQuery.addEventListener("change", handlePreferenceChange);
-    compactQuery.addEventListener("change", handlePreferenceChange);
+    compactQuery.addEventListener("change", handleCompactChange);
 
     return () => {
       disposed = true;
       window.cancelAnimationFrame(frameId);
-      window.removeEventListener("resize", start);
+      resizeObserver?.disconnect();
+      if (!resizeObserver) {
+        window.removeEventListener("resize", handleResize);
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       reduceMotionQuery.removeEventListener("change", handlePreferenceChange);
-      compactQuery.removeEventListener("change", handlePreferenceChange);
+      compactQuery.removeEventListener("change", handleCompactChange);
     };
   }, []);
 
