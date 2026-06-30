@@ -1,3 +1,4 @@
+import { resumeSurfaceStrongClass } from "../styles";
 import type { ResumeProfile } from "../types";
 
 type HeroSectionProps = Readonly<{
@@ -20,7 +21,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
         {profile.highlights.map((item, index) => (
           <span
             key={item}
-            className="inline-flex items-center gap-2.5 rounded-full border border-[rgba(148,163,184,0.18)] bg-[rgba(255,255,255,0.035)] px-3 py-1 text-[0.88rem] font-semibold sm:gap-4 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-inherit sm:font-normal"
+            className={`inline-flex items-center gap-2.5 rounded-full px-3 py-1 text-[0.88rem] font-semibold sm:gap-4 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-inherit sm:font-normal ${resumeSurfaceStrongClass}`}
           >
             {index > 0 ? (
               <span

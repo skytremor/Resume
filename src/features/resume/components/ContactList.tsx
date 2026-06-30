@@ -1,3 +1,4 @@
+import { resumeSurfaceClass } from "../styles";
 import type { ContactLink } from "../types";
 import { Icon } from "./Icon";
 
@@ -16,7 +17,7 @@ export function ContactList({ contacts }: ContactListProps) {
 
         return (
           <div
-            className="flex min-h-12 min-w-0 items-center gap-[10px] rounded-lg border border-[rgba(148,163,184,0.16)] bg-[rgba(255,255,255,0.035)] px-[13px] py-3 sm:px-[14px]"
+            className={`flex min-h-12 min-w-0 items-center gap-[10px] rounded-lg px-[13px] py-3 sm:px-[14px] ${resumeSurfaceClass}`}
             key={contact.label}
           >
             <Icon graphic={contact.icon} />

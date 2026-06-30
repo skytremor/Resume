@@ -1,5 +1,7 @@
+import { cn } from "@/lib/cn";
 import { siteConfig } from "@/lib/site";
 
+import { resumePanelClass } from "../styles";
 import type { ResumeContent } from "../types";
 import { AnimatedMeshBackground } from "./AnimatedMeshBackground";
 import { ContactList } from "./ContactList";
@@ -17,7 +19,7 @@ type ResumePageProps = Readonly<{
 export function ResumePage({ content }: ResumePageProps) {
   return (
     <main
-      className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_10%_4%,rgba(255,49,41,0.12),transparent_22rem),radial-gradient(circle_at_94%_20%,rgba(32,214,107,0.08),transparent_20rem),#000]"
+      className="relative min-h-screen overflow-x-clip"
       aria-label="Christian Rodriguez resume"
     >
       <AnimatedMeshBackground />
@@ -26,7 +28,7 @@ export function ResumePage({ content }: ResumePageProps) {
         aria-labelledby="resume-title"
       >
         <div
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.035),transparent_28%),radial-gradient(circle_at_100%_45%,rgba(255,49,41,0.07),transparent_20rem)]"
+          className="pointer-events-none absolute inset-0"
           aria-hidden="true"
         />
 
@@ -57,7 +59,12 @@ export function ResumePage({ content }: ResumePageProps) {
           />
         </section>
 
-        <blockquote className="relative z-10 flex flex-wrap items-center justify-center gap-x-1 gap-y-2 rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] px-4 py-[16px] text-center text-[clamp(0.98rem,4vw,1.55rem)] font-extrabold text-resume-muted shadow-resume-panel sm:p-[18px]">
+        <blockquote
+          className={cn(
+            resumePanelClass,
+            "relative z-10 flex flex-wrap items-center justify-center gap-x-1 gap-y-2 px-4 py-[16px] text-center text-[clamp(0.98rem,4vw,1.55rem)] font-extrabold text-resume-muted sm:p-[18px]",
+          )}
+        >
           <span
             className="text-[1.9rem] leading-[0.8] font-[850] text-resume-red sm:text-[2.2rem]"
             aria-hidden="true"

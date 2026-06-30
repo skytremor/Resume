@@ -1,6 +1,7 @@
 import { cn } from "@/lib/cn";
 
 import { brandAssetRegistry, uiIconRegistry } from "../graphic-registry";
+import { resumeSurfaceStrongClass } from "../styles";
 import type { ResumeGraphic } from "../types";
 import { BrandAsset } from "./BrandAsset";
 
@@ -21,7 +22,10 @@ export function Icon({
 }: IconProps) {
   const isStack = size === "stack";
   const containerClassName = isStack
-    ? "inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[rgba(148,163,184,0.16)] bg-[rgba(255,255,255,0.045)] p-[5px] text-[#eef2f4]"
+    ? cn(
+        "inline-flex h-11 w-11 items-center justify-center rounded-xl p-[5px] text-[#eef2f4]",
+        resumeSurfaceStrongClass,
+      )
     : "inline-flex h-[18px] w-[18px] flex-none items-center justify-center text-resume-red";
 
   if (graphic.type === "brand") {

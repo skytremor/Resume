@@ -4,9 +4,13 @@
   --font-sans: "Aptos", "Segoe UI", "Trebuchet MS", sans-serif;
   --font-mono: "Cascadia Mono", "Consolas", "Courier New", monospace;
   --color-resume-bg: #03070b;
-  --color-resume-panel: rgba(7, 15, 21, 0.9);
-  --color-resume-panel-soft: rgba(10, 21, 29, 0.78);
+  --color-resume-panel: #0a151dc7;
+  --color-resume-panel-soft: #10212b;
+  --color-resume-surface: rgba(255, 255, 255, 0.035);
+  --color-resume-surface-strong: rgba(255, 255, 255, 0.045);
   --color-resume-line: rgba(148, 163, 184, 0.22);
+  --color-resume-line-soft: rgba(148, 163, 184, 0.16);
+  --color-resume-line-strong: rgba(148, 163, 184, 0.18);
   --color-resume-muted: #c9d1d9;
   --color-resume-text: #f6f8fa;
   --color-resume-subtle: #9da8b3;

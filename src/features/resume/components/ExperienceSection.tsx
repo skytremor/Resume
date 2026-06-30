@@ -1,5 +1,11 @@
+import { cn } from "@/lib/cn";
+
+import {
+  resumeInsetPanelClass,
+  resumePanelClass,
+  resumeSurfaceStrongClass,
+} from "../styles";
 import type { Experience } from "../types";
-import { CompanyLogo } from "./CompanyLogo";
 import { SectionHeading } from "./SectionHeading";
 
 type ExperienceSectionProps = Readonly<{
@@ -9,7 +15,7 @@ type ExperienceSectionProps = Readonly<{
 export function ExperienceSection({ experiences }: ExperienceSectionProps) {
   return (
     <section
-      className="rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] shadow-resume-panel lg:p-5"
+      className={cn(resumePanelClass, "p-[18px] lg:p-5")}
       aria-label="Professional experience"
     >
       <SectionHeading icon="experience">Professional Experience</SectionHeading>
@@ -17,7 +23,10 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
       <div className="relative grid gap-3 pl-5 sm:pl-6.5">
         {experiences.map((job, index) => (
           <article
-            className="relative grid min-w-0 grid-cols-[56px_minmax(0,1fr)] items-start gap-x-3.5 gap-y-2 rounded-lg border border-[rgba(148,163,184,0.16)] bg-resume-panel-soft p-3 sm:grid-cols-[64px_minmax(0,1fr)] sm:p-3.5 md:grid-cols-[70px_76px_minmax(0,1fr)]"
+            className={cn(
+              resumeInsetPanelClass,
+              "relative grid min-w-0 grid-cols-[56px_minmax(0,1fr)] items-start gap-x-3.5 gap-y-2 rounded-lg p-3 sm:grid-cols-[64px_minmax(0,1fr)] sm:p-3.5 md:grid-cols-[70px_minmax(0,1fr)]",
+            )}
             key={`${job.year}-${job.company}`}
           >
             <span
@@ -43,10 +52,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
                 </span>
               ) : null}
             </div>
-
-            <CompanyLogo job={job} />
-
-            <div className="col-start-2 row-span-2 row-start-1 min-w-0 md:col-start-3 md:row-span-1 md:row-start-1">
+            <div className="col-start-2 row-start-1 min-w-0">
               <h3 className="mb-1.5 text-[0.98rem] leading-[1.28] text-white sm:text-base">
                 {job.company}
                 <span className="mt-1 block text-[0.8rem] font-extrabold text-resume-red sm:text-[0.84rem]">
@@ -62,7 +68,10 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
               >
                 {job.tags.map((tag) => (
                   <li
-                    className="inline-flex min-h-6.5 items-center rounded-[5px] border border-[rgba(148,163,184,0.18)] bg-[rgba(255,255,255,0.045)] px-2.25 py-1 text-[0.74rem] font-bold text-[#e7edf2] sm:min-h-7 sm:px-2.5 sm:py-1.25 sm:text-[0.78rem]"
+                    className={cn(
+                      resumeSurfaceStrongClass,
+                      "inline-flex min-h-6.5 items-center rounded-[5px] px-2.25 py-1 text-[0.74rem] font-bold text-[#e7edf2] sm:min-h-7 sm:px-2.5 sm:py-1.25 sm:text-[0.78rem]",
+                    )}
                     key={tag}
                   >
                     {tag}

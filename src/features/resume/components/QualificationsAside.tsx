@@ -1,4 +1,8 @@
+import { cn } from "@/lib/cn";
+
+import { resumePanelClass } from "../styles";
 import type { ResumeFact, TechItem } from "../types";
+import { CheckItem } from "./CheckItem";
 import { Icon } from "./Icon";
 import { OutSystemsBadge } from "./OutSystemsBadge";
 import { SectionHeading } from "./SectionHeading";
@@ -8,20 +12,6 @@ type QualificationsAsideProps = Readonly<{
   stack: TechItem[];
   facts: ResumeFact[];
 }>;
-
-function CheckItem({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <li className="flex gap-2.5 text-[0.91rem] leading-[1.35] text-[#dde4ea]">
-      <span
-        className="mt-[0.08em] grid h-[14px] w-[14px] shrink-0 place-items-center rounded-full border-[1.5px] border-resume-red text-[0.54rem] leading-none font-[850] text-resume-red"
-        aria-hidden="true"
-      >
-        &#10003;
-      </span>
-      <span>{children}</span>
-    </li>
-  );
-}
 
 export function QualificationsAside({
   certifications,
@@ -36,7 +26,7 @@ export function QualificationsAside({
       className="relative z-10 grid gap-[14px]"
       aria-label="Additional qualifications"
     >
-      <section className="rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] shadow-resume-panel lg:p-5">
+      <section className={cn(resumePanelClass, "p-[18px] lg:p-5")}>
         <SectionHeading icon="certification">
           Certifications &amp; Specializations
         </SectionHeading>
@@ -68,7 +58,7 @@ export function QualificationsAside({
         ) : null}
       </section>
 
-      <section className="rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] shadow-resume-panel lg:p-5">
+      <section className={cn(resumePanelClass, "p-[18px] lg:p-5")}>
         <SectionHeading icon="stack">Technical Stack</SectionHeading>
 
         <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(82px,1fr))] gap-x-3 gap-y-4 p-0">
@@ -84,7 +74,7 @@ export function QualificationsAside({
         </ul>
       </section>
 
-      <section className="rounded-lg border border-resume-line bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.008)),var(--color-resume-panel)] p-[18px] shadow-resume-panel lg:p-5">
+      <section className={cn(resumePanelClass, "p-[18px] lg:p-5")}>
         <SectionHeading icon="info">Other Info</SectionHeading>
 
         <ul className="m-0 grid list-none gap-[9px] p-0">
