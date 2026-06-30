@@ -44,10 +44,6 @@ export function Icon({
       >
         <BrandAsset
           asset={graphic.key}
-          className={cn(
-            isStack ? "h-[34px] w-[34px]" : "h-[18px] w-[18px]",
-            isWide && isStack && "h-[18px] w-[54px]",
-          )}
           decorative
           height={isStack ? (isWide ? 18 : 34) : 18}
           width={isStack ? (isWide ? 54 : 34) : 18}
